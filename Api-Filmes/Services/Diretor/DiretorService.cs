@@ -1,5 +1,6 @@
 ﻿using Api_Filmes.Data;
 using Api_Filmes.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api_Filmes.Services.Diretor
 {
@@ -21,9 +22,27 @@ namespace Api_Filmes.Services.Diretor
             throw new NotImplementedException();
         }
 
-        public Task<ResponseModel<List<DiretorModel>>> ListarDiretores()
+        public async Task<ResponseModel<List<DiretorModel>>> ListarDiretores()
         {
-            throw new NotImplementedException();
+            ResponseModel<List<DiretorModel>> response = new ResponseModel<List<DiretorModel>>();
+            try
+            {
+
+                var diretores = await _context.Diretores.ToListAsync();
+
+                response.Dados = diretores;
+                response.Mensagem = "Diretores listados com sucesso."; 
+
+                return response;
+
+            }
+            catch (Exception ex)
+            {
+                response.Mensagem = ex.Message;
+                response.Status = false;
+                return response;
+
+            }
         }
     }
 }
