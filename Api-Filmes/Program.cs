@@ -1,5 +1,6 @@
 
 using Api_Filmes.Services.Diretor;
+using Api_Filmes.Services.Filme;
 using Microsoft.EntityFrameworkCore;
 
 namespace Api_Filmes
@@ -18,6 +19,9 @@ namespace Api_Filmes
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddScoped<DiretorInterface, DiretorService>();
+
+            builder.Services.AddScoped<IFilmeInterface, FilmeService>();
+
 
             builder.Services.AddDbContext<Data.AppDBContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

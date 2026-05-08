@@ -99,10 +99,11 @@ namespace Api_Filmes.Services.Diretor
 
             } catch (Exception ex)
             {
-                response.Mensagem = ex.Message;
+                response.Mensagem = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
                 response.Status = false;
                 return response;
             }
+           
 
 
         }
@@ -125,6 +126,8 @@ namespace Api_Filmes.Services.Diretor
 
                 diretor.Nome = diretorEdiçãoDTO.Nome;
                 diretor.Sobrenome = diretorEdiçãoDTO.Sobrenome;
+                diretor.Nascimento = diretorEdiçãoDTO.Nascimento;
+                diretor.Nacionalidade = diretorEdiçãoDTO.Nacionalidade;
 
                 _context.Diretores.Update(diretor);
                 await _context.SaveChangesAsync();
