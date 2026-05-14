@@ -57,7 +57,8 @@ namespace Api_Filmes.Services.Filme
             try
             {
 
-                var filmes = await _context.Filmes.Include(d => d.Diretor).FirstOrDefaultAsync(filmebanco => filmebanco.Id == idfilme);
+                var filmes = await _context.Filmes.Include(d => d.Diretor)
+                    .FirstOrDefaultAsync(filmebanco => filmebanco.Id == idfilme);
 
                 if (filmes == null)
                 {
@@ -89,10 +90,11 @@ namespace Api_Filmes.Services.Filme
                 var novoFilme = new FilmesModel
                 {
                     Titulo = filmeCriaçãoDTO.Titulo,
-                    Genero = filmeCriaçãoDTO.Genero,
+                    Gênero = filmeCriaçãoDTO.Gênero,
                     Ano = filmeCriaçãoDTO.Ano,
                     Sinopse = filmeCriaçãoDTO.Sinopse,
                     Duração = filmeCriaçãoDTO.Duração,
+                    Classificação = filmeCriaçãoDTO.Classificação,
                     Avaliação = filmeCriaçãoDTO.Avaliação,
                     
                 };
@@ -100,21 +102,26 @@ namespace Api_Filmes.Services.Filme
                 if (filmeCriaçãoDTO.Diretor.Id > 0)
 
                 novoFilme.Diretor = await _context.Diretores.FirstOrDefaultAsync(diretorbanco => diretorbanco.Id == filmeCriaçãoDTO.Diretor.Id);
+                
 
                 else
                 {
-                    var novoDiretor = new DiretorModel
+                    novoFilme.Diretor = new DiretorModel
                     {
                         Nome = filmeCriaçãoDTO.Diretor.Nome,
                         Sobrenome = filmeCriaçãoDTO.Diretor.Sobrenome,
                         Nascimento = filmeCriaçãoDTO.Diretor.Nascimento,
                         Nacionalidade = filmeCriaçãoDTO.Diretor.Nacionalidade
                     };
-                    _context.Diretores.Add(novoDiretor);
+
+                    
+
+                    _context.Add(novoFilme);
                     await _context.SaveChangesAsync();
 
                     response.Dados = novoFilme;
                     response.Mensagem = "Diretor cadastrado com sucesso.";
+                    response.Status = true;
 
                 }
 
@@ -141,7 +148,8 @@ namespace Api_Filmes.Services.Filme
             ResponseModel<List<FilmesModel>> response = new ResponseModel<List<FilmesModel>>();
             try
             {
-                var filme = await _context.Filmes.Include(d => d.Diretor).FirstOrDefaultAsync(filmebanco => filmebanco.Id == filmeEdiçãoDTO.Id);
+                var filme = await _context.Filmes.Include(d => d.Diretor)
+                    .FirstOrDefaultAsync(filmebanco => filmebanco.Id == filmeEdiçãoDTO.Id);
 
 
                 if (filme == null)
@@ -152,10 +160,11 @@ namespace Api_Filmes.Services.Filme
 
 
                 filme.Titulo = filmeEdiçãoDTO.Titulo;
-                filme.Genero = filmeEdiçãoDTO.Genero;
+                filme.Gênero = filmeEdiçãoDTO.Gênero    ;
                 filme.Ano = filmeEdiçãoDTO.Ano;
                 filme.Sinopse = filmeEdiçãoDTO.Sinopse;
                 filme.Duração = filmeEdiçãoDTO.Duração;
+                filme.Classificação = filmeEdiçãoDTO.Classificação;
                 filme.Avaliação = filmeEdiçãoDTO.Avaliação;
 
                 if (filme.Diretor != null)
